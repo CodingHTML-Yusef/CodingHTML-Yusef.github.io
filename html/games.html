@@ -47,7 +47,7 @@
             <li><a href="">Unblocker</a></li>
             <li><h3 onclick="openSidebar()">Settings</h3></li>
           </ul>
-          <h1 class="logo">Glatic</h1>
+          <h1 class="logo">Polaris</h1>
         </div>
       </nav>
       <script src="/js/navbar/navbar.js"></script>
@@ -74,18 +74,49 @@
           <button style="width: 15vh; margin-top: 40vh;" class="themebutton" onclick="changeTitle('Polaris');changeStylesheet('/css/themes/theme-flamingo.css')" data-favicon="/assets/fonts/icons/favicon.ico">Reset</button>
         </div>
       </div>
-      <li>
-        <div class="gamecard">
-          <a href="#" onclick="localStorage.setItem('currentgame', 'https://raw.githack.com/3kh0/3kh0-assets/main/10-minutes-till-dawn/index.html'); window.location.href = 'play';">
-            <img src="/img/tmtd.png" class="gameimage" />
-            <div class="gameinfo">
-              <b>
-                <p class="gamename">10 Minutes Till Dawn</p>
-              </b>
-              <p class="gamedesc">10 Minutes Till Dawn is an action bullet-hell roguelite game, attack the enemies and survive for 10 minutes!</p>
-            </div>
-          </a>
-        </div>
-      </li>
+      <script src="/js/sidebar/sidebar.js"></script>
+      <!--end sidebar-->
+      <div class="cardcontainer" id="card-container">
+        <div id="spinner-container"></div>
+      </div>
+    </div>
+    <script src="/js/effects/cardhover.js"></script>
+    <script>
+      const spinner = document.getElementById("spinner-container");
+      spinner.innerHTML = '<div class="spinner"></div>';
+
+      fetch("/assets/games/games.json")
+        .then((response) => response.json())
+        .then((data) => {
+          const container = document.getElementById("card-container");
+
+          for (const game of data) {
+            const card = document.createElement("div");
+            card.classList.add("card");
+
+            const link = document.createElement("a");
+            const image = document.createElement("img");
+            image.classList.add("cardimage");
+            image.src = game.image;
+
+            const name = document.createElement("p");
+            name.classList.add("cardname");
+            name.textContent = game.name;
+
+            link.appendChild(image);
+            link.appendChild(name);
+            card.appendChild(link);
+
+            container.appendChild(card);
+          }
+
+          spinner.remove();
+        })
+        .catch((error) => {
+          spinner.remove();
+          alert("Error: " + error);
+          console.error(error);
+        });
+   </script>
   </body>
 </html>
